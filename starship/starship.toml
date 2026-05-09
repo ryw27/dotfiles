@@ -1,0 +1,11 @@
+# Show your username always
+[username]
+show_always = true
+style_user = "bold blue"
+format = "[$user]($style) in "
+
+# Show the full directory path
+[directory]
+truncation_length = 0 # 0 means "don't shorten anything"
+truncate_to_repo = false # Show path even inside Git repos
+style = "bold cyan"
