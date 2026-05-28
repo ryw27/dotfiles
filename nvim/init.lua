@@ -1,2 +1,5 @@
--- bootstrap lazy.nvim, LazyVim and your plugins
-require("config.lazy")
+-- TODO: Make nicer
+require("lazy-init")
+require("vim-options")
+require("vim-keymaps")
+require("lazy").setup("plugins")

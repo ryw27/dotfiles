@@ -1,6 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH="$PATH:/snap/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -78,7 +80,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
+export MANPAGER="nvim +Man!"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -104,4 +106,7 @@ export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias fd="fdfind"
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+# . "/home/rywbo/.deno/env"
