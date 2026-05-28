@@ -2,36 +2,6 @@
 
 Leader is `<Space>`. Plugin-specific keymaps live with their plugin specs in `lua/plugins/*.lua`; general maps live in `lua/vim-keymaps.lua`.
 
-## GNU Stow
-
-Recommended dotfiles layout:
-
-```text
-~/dotfiles/
-├── nvim/.config/nvim/
-└── tmux/.tmux.conf
-```
-
-Move and stow:
-
-```sh
-mkdir -p ~/dotfiles/nvim/.config
-mv ~/.config/nvim ~/dotfiles/nvim/.config/nvim
-cd ~/dotfiles
-stow nvim
-```
-
-For tmux:
-
-```sh
-mkdir -p ~/dotfiles/tmux
-mv ~/.tmux.conf ~/dotfiles/tmux/.tmux.conf
-cd ~/dotfiles
-stow tmux
-```
-
-Move or back up existing target files before running `stow`.
-
 ## Core Editing
 
 | Key                       | Action                                 |
@@ -183,4 +153,4 @@ Move or back up existing target files before running `stow`.
 | `<leader>x`                   | Toggle checkbox                       |
 | `<C-r>`                       | Recalculate list numbering            |
 | `dd` / visual `d`             | Delete and recalculate list numbering |
-|  |
+|                               |
