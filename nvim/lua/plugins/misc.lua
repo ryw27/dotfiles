@@ -2,6 +2,10 @@
 -- Each one is opt-in / load-on-demand wherever possible.
 
 return {
+	{
+		"sindrets/diffview.nvim",
+		opts = {},
+	},
 	-- LazyDev: types for nvim Lua API + luvit when editing nvim config.
 	{
 		"folke/lazydev.nvim",
