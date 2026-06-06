@@ -3,6 +3,25 @@
 
 return {
 	{
+		"loctvl842/monokai-pro.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("monokai-pro").setup({
+				filter = "spectrum",
+			})
+			vim.cmd.colorscheme("monokai-pro-spectrum")
+		end,
+	},
+	{
+		"polirritmico/monokai-nightasty.nvim",
+		opts = {},
+		-- config = function(_, opts)
+		-- 	requre("monokai-nightasty").setup(opts)
+		-- 	vim.cmd.colorscheme("monokai-nightasty")
+		-- end,
+	},
+	{
 		"catppuccin/nvim",
 		name = "catppuccin",
 		lazy = false,
@@ -27,10 +46,10 @@ return {
 				render_markdown = true,
 			},
 		},
-		config = function(_, opts)
-			require("catppuccin").setup(opts)
-			vim.cmd.colorscheme("catppuccin-mocha")
-		end,
+		-- config = function(_, opts)
+		-- 	require("catppuccin").setup(opts)
+		-- 	vim.cmd.colorscheme("catppuccin-mocha")
+		-- end,
 	},
 	{ "nyngwang/nvimgelion", name = "nvimgelion" },
 	{ "ellisonleao/gruvbox.nvim", name = "gruvbox", lazy = true },
@@ -49,6 +68,19 @@ return {
 			},
 		},
 	},
-	{ "xiyaowong/transparent.nvim", opts = {} },
+	{
+		"xiyaowong/transparent.nvim",
+		lazy = false, -- Load immediately at boot
+		config = function()
+			require("transparent").setup({
+				extra_groups = {
+					"NormalFloat", -- Clear floating window backgrounds
+					"NemoTree", -- Clear file tree backgrounds if you use Neo-tree
+					"LineNr", -- Clear line numbers background
+					"SignColumn", -- Clear git signs column background
+				},
+			})
+		end,
+	},
 	{ "nyoom-engineering/oxocarbon.nvim" },
 }
