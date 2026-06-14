@@ -52,15 +52,15 @@ vim.opt.selection = "inclusive"
 -- Mouse
 vim.opt.mouse = "a"
 
--- Clipboard: Unify 
+-- Clipboard: Unify
 vim.opt.clipboard = "unnamedplus"
 
 -- Diagnostics defaults (server-specific config lives in lsp-config.lua)
 vim.diagnostic.config({
-    severity_sort = true,
-    update_in_insert = false,
-    underline = true,
-    virtual_text = { spacing = 2, prefix = "●", source = "if_many" },
-    float = { border = "rounded", source = "if_many" },
-    jump = { float = true },
+	severity_sort = true,
+	update_in_insert = false,
+	underline = true,
+	virtual_text = { spacing = 2, prefix = "●", source = "if_many" },
+	float = { border = "rounded", source = "if_many" },
+	jump = { float = true },
 })

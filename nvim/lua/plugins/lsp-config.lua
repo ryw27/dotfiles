@@ -39,9 +39,13 @@ return {
 					"--background-index",
 					"--clang-tidy",
 					"--header-insertion=iwyu",
+					"--header-insertion-decorators",
 					"--completion-style=detailed",
+					"--all-scopes-completion",
 					"--function-arg-placeholders",
 					"--fallback-style=llvm",
+					"--limit-references=0",
+					"--limit-results=0",
 				},
 				init_options = {
 					usePlaceholders = true,
@@ -179,6 +183,20 @@ return {
 					kmap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
 					kmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
 
+					-- Clangd: switch between source (.cpp/.c) and header (.h/.hpp).
+					-- Mirrors `C/C++: Switch Header/Source` from VS Code's cpptools.
+					if client.name == "clangd" then
+						kmap("n", "<leader>ch", function()
+							local params = vim.lsp.util.make_text_document_params(bufnr)
+							client:request("textDocument/switchSourceHeader", params, function(err, result)
+								if err or not result then
+									return
+								end
+								vim.cmd.edit(vim.uri_to_fname(result))
+							end, bufnr)
+						end, "Switch source/header")
+					end
+
 					-- Inlay hints (toggle).
 					if client:supports_method("textDocument/inlayHint") then
 						-- vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
@@ -235,9 +253,9 @@ return {
 				"hadolint",
 				"eslint_d",
 				"vale",
+				"cppcheck", -- C / C++ second-opinion static analyzer (alongside clang-tidy via clangd)
 				-- DAP adapters
 				"codelldb", -- C / C++ / Rust
-				"cpptools", -- C / C++ (alt)
 				"debugpy", -- Python
 				"js-debug-adapter", -- JS / TS
 				"delve", -- Go
