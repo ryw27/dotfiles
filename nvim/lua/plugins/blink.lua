@@ -10,12 +10,6 @@ return {
 		"saghen/blink.lib",
 		"rafamadriz/friendly-snippets",
 	},
-	build = function()
-		-- build the fuzzy matcher, wait up to 60 seconds
-		-- you can use `gb` in `:Lazy` to rebuild the plugin as needed
-		require("blink.cmp").build():wait(60000)
-	end,
-
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
 	opts = {
@@ -26,7 +20,6 @@ return {
 			["<C-h>"] = { "show_documentation", "hide_documentation", "fallback" },
 		},
 		appearance = {
-			use_nvim_cmp_as_default = true,
 			nerd_font_variant = "mono",
 		},
 		completion = {
