@@ -19,22 +19,52 @@ return {
 		notify_on_error = true,
 		formatters_by_ft = {
 			lua = { "stylua" },
-
-			-- Python: prefer ruff (one tool, fast); fall back to isort+black.
+			-- Prefer ruff, look for others
 			python = function(bufnr)
-				if require("conform").get_formatter_info("ruff_format", bufnr).available then
-					return { "ruff_format", "ruff_organize_imports" }
+				local buf_name = vim.api.nvim_buf_get_name(bufnr)
+				local formatter_lookup = {
+					ruff = { "ruff_format", "ruff_organize_imports" },
+					black = { "isort", "black" },
+					pyink = { "isort", "pyink" },
+					yapf = { "yapf" },
+					autopep8 = { "autopep8" },
+				}
+
+				-- Prioritize ruff
+				if vim.fs.find({ "ruff.toml", ".ruff.toml" }, { upward = true, path = buf_name, type = "file" })[1] then
+					return formatter_lookup.ruff
 				end
-				return { "isort", "black" }
+
+				local pyproject = vim.fs.find("pyproject.toml", { upward = true, path = buf_name, type = "file" })[1]
+				if pyproject then
+					-- Read the file and collect all tools present
+					local tools_found = {}
+					local lines = vim.fn.readfile(pyproject)
+					for _, line in ipairs(lines) do
+						local tool_name = line:match("%[tool%.([%w_%-]+)")
+						if tool_name then
+							tools_found[tool_name] = true
+						end
+					end
+
+					if tools_found.pyink then
+						return { "isort", "pyink" }
+					elseif tools_found.black then
+						return { "isort", "black" }
+					elseif tools_found.ruff then
+						return { "ruff_format", "ruff_organize_imports" }
+					elseif tools_found.yapf then
+						return { "yapf" }
+					elseif tools_found.autopep8 then
+						return { "autopep8" }
+					end
+				end
+
+				return {}
 			end,
-
-			-- Go
 			go = { "goimports", "gofumpt" },
-
-			-- C / C++
 			c = { "clang-format" },
 			cpp = { "clang-format" },
-
 			-- Web / TS / JS family
 			javascript = { "prettierd", "prettier", stop_after_first = true },
 			javascriptreact = { "prettierd", "prettier", stop_after_first = true },
@@ -46,23 +76,19 @@ return {
 			css = { "prettierd", "prettier", stop_after_first = true },
 			scss = { "prettierd", "prettier", stop_after_first = true },
 			less = { "prettierd", "prettier", stop_after_first = true },
-
 			-- Data / config
 			json = { "prettierd", "prettier", stop_after_first = true },
 			jsonc = { "prettierd", "prettier", stop_after_first = true },
 			yaml = { "prettierd", "prettier", stop_after_first = true },
 			toml = { "taplo" },
 			markdown = { "prettierd", "prettier", stop_after_first = true },
-
 			-- Shell
 			sh = { "shfmt" },
 			bash = { "shfmt" },
 			zsh = { "shfmt" },
-
 			-- SQL
 			sql = { "sql_formatter" },
-
-			-- Rust (LSP usually handles it, but rustfmt as belt-and-braces)
+			-- Rust
 			rust = { "rustfmt", lsp_format = "fallback" },
 		},
 		formatters = {

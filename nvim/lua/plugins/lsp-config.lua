@@ -9,19 +9,29 @@ return {
 			"mason-org/mason.nvim",
 			"mason-org/mason-lspconfig.nvim",
 			"saghen/blink.cmp",
+			{
+				"linux-cultist/venv-selector.nvim",
+				dependencies = { "nvim-telescope/telescope.nvim" },
+				opts = {
+					cached_venv_automatic_activation = true,
+				},
+				keys = {
+					-- Keymap to open the virtual environment selector UI
+					{ "<leader>cv", "<cmd>VenvSelect<cr>", desc = "Select Virtual Env" },
+				},
+			},
 		},
 		config = function()
+			require("lspconfig")
 			require("mason").setup()
 
-			-- 1. Capabilities from blink.cmp (snippetSupport, completion, etc.)
-			local has_blink, blink = pcall(require, "blink.cmp")
-			local capabilities = has_blink and blink.get_lsp_capabilities()
-				or vim.lsp.protocol.make_client_capabilities()
+			local blink = require("blink.cmp")
+			local capabilities = blink.get_lsp_capabilities()
 
-			-- 2. Apply defaults to every server (Neovim 0.11+ API).
+			-- Apply defaults to every server
 			vim.lsp.config("*", { capabilities = capabilities })
 
-			-- 3. Per-server overrides.
+			-- Per-server overrides.
 			vim.lsp.config("lua_ls", {
 				settings = {
 					Lua = {
@@ -54,6 +64,17 @@ return {
 				},
 			})
 
+			vim.lsp.config("basedpyright", {
+				settings = {
+					basedpyright = {
+						analysis = {
+							autoSearchPaths = true,
+							diagnosticMode = "openFilesOnly",
+						},
+					},
+				},
+			})
+
 			vim.lsp.config("gopls", {
 				settings = {
 					gopls = {
@@ -69,19 +90,6 @@ return {
 							functionTypeParameters = true,
 							parameterNames = true,
 							rangeVariableTypes = true,
-						},
-					},
-				},
-			})
-
-			vim.lsp.config("pyright", {
-				settings = {
-					python = {
-						analysis = {
-							typeCheckingMode = "basic",
-							autoSearchPaths = true,
-							diagnosticMode = "openFilesOnly",
-							useLibraryCodeForTypes = true,
 						},
 					},
 				},
@@ -103,12 +111,10 @@ return {
 				},
 			})
 
-			-- 4. Tell mason-lspconfig which servers to install and have it
-			--    auto-enable them via vim.lsp.enable() (mason-lspconfig 2.x).
+			-- Tell mason-lspconfig which servers to install and have it
 			require("mason-lspconfig").setup({
 				automatic_enable = true,
 				ensure_installed = {
-					-- Systems / general
 					"lua_ls",
 					"clangd",
 					"gopls",
@@ -130,7 +136,7 @@ return {
 				},
 			})
 
-			-- 5. Diagnostic signs (config.virtual_text etc. already in vim-options.lua).
+			-- Diagnostic signs (config.virtual_text etc. already in vim-options.lua).
 			local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = "󰋽 " }
 			vim.diagnostic.config({
 				signs = {
@@ -143,7 +149,7 @@ return {
 				},
 			})
 
-			-- 6. LspAttach: keymaps that only make sense with an LSP attached
+			-- LspAttach: keymaps that only make sense with an LSP attached
 			--    + per-server inlay hints / document highlight / code lens.
 			local grp = vim.api.nvim_create_augroup("UserLspAttach", { clear = true })
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -183,8 +189,6 @@ return {
 					kmap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
 					kmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
 
-					-- Clangd: switch between source (.cpp/.c) and header (.h/.hpp).
-					-- Mirrors `C/C++: Switch Header/Source` from VS Code's cpptools.
 					if client.name == "clangd" then
 						kmap("n", "<leader>ch", function()
 							local params = vim.lsp.util.make_text_document_params(bufnr)
@@ -203,24 +207,6 @@ return {
 						kmap("n", "<leader>ih", function()
 							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 						end, "Toggle inlay hints (global)")
-					end
-
-					-- Code lens (Go, Rust, Java, TS commonly). Transient: press
-					-- <leader>cL to show, annotations clear on the next cursor
-					-- move (or after 8s as a safety net). No persistent noise.
-					if client:supports_method("textDocument/codeLens") then
-						kmap("n", "<leader>cL", function()
-							vim.lsp.codelens.refresh({ bufnr = bufnr })
-							local function clear()
-								pcall(vim.lsp.codelens.clear, client.id, bufnr)
-							end
-							vim.api.nvim_create_autocmd("CursorMoved", {
-								buffer = bufnr,
-								once = true,
-								callback = clear,
-							})
-							vim.defer_fn(clear, 8000)
-						end, "Code lens (transient show)")
 					end
 				end,
 			})
@@ -253,7 +239,9 @@ return {
 				"hadolint",
 				"eslint_d",
 				"vale",
-				"cppcheck", -- C / C++ second-opinion static analyzer (alongside clang-tidy via clangd)
+				-- NOTE: cppcheck is NOT in the Mason registry. Install it system-wide
+				-- (e.g. `sudo apt install cppcheck` / `brew install cppcheck`); nvim-lint
+				-- will pick it up from $PATH automatically.
 				-- DAP adapters
 				"codelldb", -- C / C++ / Rust
 				"debugpy", -- Python

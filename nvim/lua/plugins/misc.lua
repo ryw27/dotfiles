@@ -16,8 +16,12 @@ return {
 			},
 		},
 	},
+	{
+		"NMAC427/guess-indent.nvim",
+		opts = {},
+	},
 
-	-- Highlights TODO / FIX / NOTE / HACK comments.
+	-- Highlights TODO / FIX / NOTE / HACK comments
 	{
 		"folke/todo-comments.nvim",
 		event = { "BufReadPost", "BufNewFile" },
