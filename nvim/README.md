@@ -1,156 +1,155 @@
 # Neovim Config
 
-Leader is `<Space>`. Plugin-specific keymaps live with their plugin specs in `lua/plugins/*.lua`; general maps live in `lua/vim-keymaps.lua`.
+Leader is `<Space>`.
 
-## Core Editing
+## Editing
 
-| Key                       | Action                                 |
-| ------------------------- | -------------------------------------- |
-| `n` / `N`                 | Next / previous search match, centered |
-| `<Esc>`                   | Clear search highlight                 |
-| `J`                       | Join lines without moving cursor       |
-| `J` / `K` in visual       | Move selection down / up               |
-| `<` / `>` in visual       | Indent and keep selection              |
-| `<leader>d`               | Delete without yanking                 |
-| `<leader>p`               | Paste replace without yanking          |
-| `<leader>y` / `<leader>Y` | Yank to system clipboard               |
+| Key                 |                            |
+| ------------------- | -------------------------- |
+| `<Esc>`             | clear search highlight     |
+| `J`                 | join lines, keep cursor    |
+| `J` / `K` in visual | move selection down / up   |
+| `<leader>d`         | delete without yanking     |
+| `<leader>p`         | paste over without yanking |
+| `<leader>y` / `Y`   | yank to system clipboard   |
 
-## Files, Search, Buffers
+Completion (blink, insert): - `<C-j>` / `<C-k>` next/prev, - `<C-h>` toggle docs, - `<C-f>` / `<C-b>` scroll docs
 
-| Key                         | Action                                  |
-| --------------------------- | --------------------------------------- |
-| `<leader>ff`                | Find files                              |
-| `<leader>fp`                | Find git/project files                  |
-| `<leader>fP`                | Find projects                           |
-| `<leader>fb`                | Find open buffers                       |
-| `<leader>fr`                | Recent files                            |
-| `<leader>fc`                | Find config files                       |
-| `<leader>fC`                | Grep config files                       |
-| `<leader>fg`                | Live grep                               |
-| `<leader>fw` / `<leader>fW` | Grep word / WORD under cursor           |
-| `<leader>/`                 | Fuzzy search current buffer             |
-| `<leader>fR`                | Resume last picker                      |
-| `<leader>ft`                | Find TODO comments                      |
-| `<leader>fx` / `<leader>fX` | Document / workspace diagnostics        |
-| `<C-d>` / `<C-u>` in picker | Page preview down / up                  |
-| `<C-q>` in picker           | Send selections to quickfix             |
-| `<leader><Tab>`             | Switch to last buffer                   |
-| `[b` / `]b`                 | Previous / next buffer                  |
-| `[q` / `]q`                 | Previous / next quickfix item           |
-| `<leader>bd` / `<leader>bD` | Delete buffer / all buffers             |
-| `<leader>cd`                | Set local cwd to current file directory |
-| `<leader>fz`                | Jump to recent directory via zoxide     |
-| `-`                         | Open parent directory in Oil            |
-| `<leader>e` / `<leader>E`   | Neo-tree floating / left sidebar        |
+## Surround (nvim-surround)
 
-## Harpoon
-
-| Key                         | Action                        |
-| --------------------------- | ----------------------------- |
-| `<leader>a`                 | Add current file              |
-| `<C-e>`                     | Harpoon menu                  |
-| `<M-1>` ... `<M-4>`         | Jump to Harpoon slots 1-4     |
-| `<leader>ap` / `<leader>an` | Previous / next Harpoon entry |
-
-## LSP and Code
-
-| Key                         | Action                                        |
-| --------------------------- | --------------------------------------------- |
-| `K`                         | Hover docs                                    |
-| `<C-s>`                     | Signature help                                |
-| `gd` / `gD`                 | Definition / declaration                      |
-| `gi` / `gr` / `gy`          | Implementation / references / type definition |
-| `<leader>fs` / `<leader>fS` | Document / workspace symbols                  |
-| `<leader>ca`                | Code action                                   |
-| `<leader>rn`                | Rename symbol                                 |
-| `<leader>cf`                | Format buffer/range                           |
-| `<leader>cL`                | Show transient code lens                      |
-| `<leader>ih`                | Toggle inlay hints                            |
-
-## Surround
-
-| Key                 | Action                  |
+| Key                 |                         |
 | ------------------- | ----------------------- |
-| `ys{motion}{char}`  | Add surrounding pair    |
-| `yss{char}`         | Surround current line   |
-| `cs{old}{new}`      | Change surrounding pair |
-| `ds{char}`          | Delete surrounding pair |
-| `S{char}` in visual | Surround selection      |
+| `ys{motion}{char}`  | add surrounding pair    |
+| `yss{char}`         | surround current line   |
+| `cs{old}{new}`      | change surrounding pair |
+| `ds{char}`          | delete surrounding pair |
+| `S{char}` in visual | surround selection      |
 
-## Diagnostics and Lists
+## Files and search (fzf)
 
-| Key                         | Action                                    |
-| --------------------------- | ----------------------------------------- |
-| `[d` / `]d`                 | Previous / next diagnostic                |
-| `<leader>vd`                | Diagnostic float                          |
-| `<leader>xd`                | Diagnostics to quickfix                   |
-| `<leader>xx` / `<leader>xX` | Workspace / buffer diagnostics in Trouble |
-| `<leader>xL` / `<leader>xQ` | Location / quickfix list in Trouble       |
-| `<leader>xt`                | TODOs in Trouble                          |
-| `<leader>cs`                | Document outline                          |
-| `<leader>cl`                | LSP defs/refs/impls                       |
+| Key                 |                                |
+| ------------------- | ------------------------------ |
+| `<leader>ff`        | find files                     |
+| `<leader>fp`        | git files                      |
+| `<leader>fP`        | projects (Snacks)              |
+| `<leader>fb`        | buffers                        |
+| `<leader>fr`        | recent files                   |
+| `<leader>fz`        | zoxide (recent dirs)           |
+| `<leader>fc` / `fC` | config files / grep config     |
+| `<leader>fg`        | live grep                      |
+| `<leader>fw` / `fW` | grep word / WORD               |
+| `<leader>/`         | lines in current buffer        |
+| `<leader>fR`        | resume last picker             |
+| `[b` / `]b`         | prev / next buffer             |
+| `<leader>bd` / `bD` | delete buffer / all buffers    |
+| `<leader>cd`        | `lcd` to this file’s directory |
+| `-`                 | Oil (parent dir as a buffer)   |
+| `<leader>e` / `E`   | Neo-tree float / left          |
+
+In a picker: `<C-d>` / `<C-u>` page preview; `<C-q>` send matches to quickfix.
+
+## LSP
+
+After a language server attaches.
+
+| Key                 |                                                                     |
+| ------------------- | ------------------------------------------------------------------- |
+| `K`                 | Hover — docs for the symbol under the cursor.                       |
+| `<C-s>`             | Signature help — argument list for the function in insert.          |
+| `gd` / `gD`         | definition / declaration                                            |
+| `gi` / `gr` / `gy`  | implementation / references / type definition                       |
+| `<leader>fs` / `fS` | document / workspace **symbols** (flat picker: functions, types, …) |
+| `<leader>ca`        | code action                                                         |
+| `<leader>rn`        | rename                                                              |
+| `<leader>ih`        | toggle inlay hints                                                  |
+| `<leader>ch`        | clangd: switch `.c` ↔ `.h`                                          |
+| `<leader>cv`        | Python venv                                                         |
+
+## Diagnostics, symbols, quickfix
+
+**Diagnostics** = errors/warnings from LSP + nvim-lint.
+
+**fzf** (`<leader>f…`) = fuzzy-pick one item
+**Trouble** (`<leader>x…`) = **panel that stays open** while you fix things.
+
+| Key                 |                                                       |
+| ------------------- | ----------------------------------------------------- |
+| `[d` / `]d`         | prev / next diagnostic                                |
+| `<leader>vd`        | float for the diagnostic on this line                 |
+| `<leader>fx` / `fX` | fzf: this file / workspace                            |
+| `<leader>xx` / `xX` | Trouble: workspace / this file                        |
+| `<leader>cs`        | Trouble **outline** — symbols tree, stays on the side |
+| `<leader>cl`        | Trouble LSP tree (defs / refs / impls)                |
+| `<leader>ft`        | TODOs (fzf)                                           |
+| `<leader>xt`        | TODOs (Trouble panel)                                 |
+| `[t` / `]t`         | prev / next TODO in file                              |
+
+**Quickfix** = one **global** list of locations (compiler, grep, or diagnostics you dumped there). `[q` / `]q` walk it. `:cdo` / `:cfdo` run a command on every item / every file.
+
+**Loclist** = same as quickfix but **per window**.
+
+| Key          |                                           |
+| ------------ | ----------------------------------------- |
+| `<leader>xd` | WARN+ diagnostics → quickfix (for `:cdo`) |
+| `<leader>xQ` | Trouble: show the quickfix list           |
+| `<leader>xL` | Trouble: show the loclist                 |
+
+## Messages
+
+| Key          |                                                         |
+| ------------ | ------------------------------------------------------- |
+| `<leader>nh` | **Snacks** — `vim.notify` toasts, history               |
+| `<leader>nd` | **Snacks** — dismiss toasts                             |
+| `<leader>nl` | **Noice** — last message (`nvim_echo` / `:echo` stream) |
+| `<leader>na` | **Noice** — all of those messages (`:Noice`)            |
+| `<leader>ne` | **Noice** — errors from that stream                     |
 
 ## Git
 
-| Key                         | Action                            |
-| --------------------------- | --------------------------------- |
-| `<leader>gg`                | LazyGit                           |
-| `<leader>gf`                | LazyGit for current file repo     |
-| `<leader>gl`                | LazyGit log                       |
-| `[h` / `]h`                 | Previous / next hunk              |
-| `<leader>hs` / `<leader>hr` | Stage / reset hunk                |
-| `<leader>hS` / `<leader>hR` | Stage / reset buffer              |
-| `<leader>hp`                | Preview hunk                      |
-| `<leader>hd` / `<leader>hD` | Diff this / diff against previous |
-| `<leader>hb` / `<leader>hB` | Blame line / toggle inline blame  |
-| `ih` in operator/visual     | Select hunk                       |
+| Key                        |                                  |
+| -------------------------- | -------------------------------- |
+| `<leader>gg` / `gf` / `gl` | LazyGit / this repo / log        |
+| `[h` / `]h`                | prev / next hunk                 |
+| `<leader>hs` / `hr`        | stage / reset hunk (visual too)  |
+| `<leader>hS` / `hR`        | stage / reset buffer             |
+| `<leader>hp`               | preview hunk                     |
+| `<leader>hd` / `hD`        | diff this / diff against `~`     |
+| `<leader>hb` / `hB`        | blame line / toggle inline blame |
+| `ih`                       | select hunk (operator / visual)  |
+
+`:DiffviewOpen` / `:DiffviewFileHistory` for multi-file diffs.
+
+## Harpoon
+
+| Key                 |                  |
+| ------------------- | ---------------- |
+| `<leader>ja`        | add current file |
+| `<C-e>`             | menu             |
+| `<M-1>` … `<M-4>`   | slots 1–4        |
+| `<leader>jp` / `jn` | prev / next      |
 
 ## Sessions, UI, Vim
 
-| Key                                        | Action                                       |
-| ------------------------------------------ | -------------------------------------------- |
-| `<leader>qs` / `<leader>ql`                | Restore project / last session               |
-| `<leader>qd`                               | Stop saving current session                  |
-| `<leader>vh` / `<leader>vk`                | Search help / keymaps                        |
-| `<leader>vc` / `<leader>vC`                | Commands / command history                   |
-| `<leader>vs`                               | Spell suggestions                            |
-| `<leader>?`                                | Buffer-local keymaps                         |
-| `<leader>nh` / `<leader>nd`                | Notification history / dismiss notifications |
-| `<leader>nl` / `<leader>na` / `<leader>ne` | Noice last / all / errors                    |
-| `<leader>id`                               | Toggle Snacks scope dim                      |
-| `<leader>u`                                | Undotree                                     |
-| `<leader>z`                                | Zen mode                                     |
-| `[t` / `]t`                                | Previous / next TODO comment                 |
-| `q` in help/qf/etc.                        | Close special buffer                         |
+| Key                        |                                              |
+| -------------------------- | -------------------------------------------- |
+| `<leader>qs` / `ql` / `qd` | restore project / last session / stop saving |
+| `<leader>vt`               | colorscheme picker (Enter = save default)    |
+| `<leader>vh` / `vk`        | help tags / keymaps                          |
+| `<leader>vc` / `vC` / `vs` | commands / command history / spell           |
+| `<leader>?`                | buffer-local keymaps                         |
+| `<leader>id`               | toggle scope dim                             |
+| `<leader>u`                | undotree                                     |
+| `<leader>z`                | zen mode                                     |
 
-## Debug and Test
+## Debug and test (TODO: Check these work)
 
-| Key                         | Action                          |
+| Key                         |                                 |
 | --------------------------- | ------------------------------- |
-| `<F5>` / `<F8>`             | Continue                        |
-| `<F10>` / `<F11>` / `<F12>` | Step over / into / out          |
-| `<leader>b` / `<leader>B`   | Toggle / conditional breakpoint |
-| `<leader>Dl` / `<leader>Dt` | Run last / terminate            |
-| `<leader>De`                | Eval expression/selection       |
-| `<leader>Du`                | Toggle DAP UI                   |
-| `<leader>Dr` / `<leader>Dc` | REPL / console UI               |
-| `<leader>DT` / `<leader>Dv` | Stack trace / variables UI      |
-| `<leader>Dw` / `<leader>Db` | Watches / breakpoints UI        |
-| `<leader>tr`                | Run nearest test                |
-| `<leader>ts` / `<leader>ta` | Run suite / all tests           |
-| `<leader>td`                | Debug nearest test              |
-| `<leader>tv`                | Toggle test summary             |
-| `<leader>to`                | Open test output                |
-| `<leader>tS`                | Stop test run                   |
-
-## Markdown
-
-| Key                           | Action                                |
-| ----------------------------- | ------------------------------------- |
-| `<CR>` in insert              | Continue or end list item             |
-| `<Tab>` / `<S-Tab>` in insert | Demote / promote list item            |
-| `o` / `O`                     | Open list item below / above          |
-| `<leader>x`                   | Toggle checkbox                       |
-| `<C-r>`                       | Recalculate list numbering            |
-| `dd` / visual `d`             | Delete and recalculate list numbering |
-|                               |
+| `<F5>`                      | continue                        |
+| `<F10>` / `<F11>` / `<F12>` | step over / into / out          |
+| `<leader>b` / `B`           | toggle / conditional breakpoint |
+| `<leader>Du`                | toggle DAP UI                   |
+| `<leader>tr`                | nearest test                    |
+| `<leader>ts` / `ta`         | suite / all tests               |
+| `<leader>td`                | debug nearest test              |
+| `<leader>tv` / `to`         | summary / output                |

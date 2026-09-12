@@ -1,4 +1,6 @@
--- DAP
+-- DAP/Debugger
+-- TODO: Never tested this lol
+
 return {
 	{
 		"mfussenegger/nvim-dap",
@@ -37,14 +39,14 @@ return {
 				desc = "Debug: Step Out",
 			},
 			{
-				"<leader>b",
+				"<leader>Db",
 				function()
 					require("dap").toggle_breakpoint()
 				end,
 				desc = "Debug: Toggle Breakpoint",
 			},
 			{
-				"<leader>B",
+				"<leader>DB",
 				function()
 					require("dap").set_breakpoint(vim.fn.input("Condition: "))
 				end,
@@ -70,7 +72,7 @@ return {
 
 			require("mason-nvim-dap").setup({
 				automatic_installation = true,
-				ensure_installed = { "python", "codelldb", "delve" },
+				ensure_installed = { "python", "codelldb", "delve", "js" },
 				handlers = {
 					-- Default handler for Python and any other out-of-the-box adapters
 					function(config)

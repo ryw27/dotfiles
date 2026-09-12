@@ -1,6 +1,6 @@
--- blink.cmp: completion engine. signature help here is the in-flight
--- popup that appears while you type function arguments (Noice handles
--- the normal-mode <C-s> popup separately).
+-- blink.cmp: Completion engine
+-- Press <C-h> while the menu is open to show documentation
+-- <C-f> and <C-b> to scroll up and down inside of the documentation
 
 return {
 	"saghen/blink.cmp",
@@ -19,40 +19,36 @@ return {
 			["<C-j>"] = { "select_next", "fallback" },
 			["<C-h>"] = { "show_documentation", "hide_documentation", "fallback" },
 		},
-		appearance = {
-			nerd_font_variant = "mono",
-		},
 		completion = {
 			accept = { auto_brackets = { enabled = true } },
+			documentation = {
+				auto_show = false,
+				window = { border = "rounded" },
+			},
 			menu = {
 				border = "rounded",
 				draw = {
 					columns = {
 						{ "kind_icon", gap = 1 },
 						{ "label", "label_description", gap = 1 },
-						{ "kind" }, -- This shows "Function", "Keyword", etc. on the right
+						{ "kind" },
 					},
 				},
 			},
-			documentation = {
-				auto_show = false,
-				window = { border = "rounded" },
-			},
 			ghost_text = { enabled = true },
 		},
-
-		enabled = function()
-			return not vim.tbl_contains({ "markdown", "text", "txt" }, vim.bo.filetype) and vim.bo.buftype ~= "prompt"
-		end,
-
-		-- 4. SOURCES & SNIPPETS
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 		},
-
 		signature = {
 			enabled = true,
 			window = { border = "rounded" },
 		},
+
+		-- Disable markdown blink autocomplete
+		enabled = function()
+			return not vim.tbl_contains({ "markdown", "text", "txt" }, vim.bo.filetype) and vim.bo.buftype ~= "prompt"
+		end,
+
 	},
 }

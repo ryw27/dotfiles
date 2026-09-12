@@ -1,6 +1,12 @@
 -- Snacks: lightweight QoL bundle (dashboard, notifier, input, scope guides,
 -- smooth scroll, word highlighter).
 
+-- ~/.config/nvim is a symlink farm into ~/dotfiles/nvim; resolve so file
+-- pickers see real files 
+local function nvim_config_dir()
+	return vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath("config") .. "/init.lua"), ":h")
+end
+
 return {
 	"folke/snacks.nvim",
 	priority = 1000,
@@ -8,13 +14,72 @@ return {
 	opts = {
 		-- Enable desired modules
 		bigfile = { enabled = true },
-		dashboard = { enabled = true },
-		explorer = { enabled = true },
-		indent = { enabled = true },
+		dashboard = {
+			enabled = true,
+			preset = {
+				keys = {
+					{
+						icon = " ",
+						key = "f",
+						desc = "Find File",
+						action = function()
+							require("fzf-lua").files()
+						end,
+					},
+					{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+					{
+						icon = " ",
+						key = "g",
+						desc = "Find Text",
+						action = function()
+							require("fzf-lua").live_grep()
+						end,
+					},
+					{ icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.dashboard.pick('projects')" },
+					{
+						icon = " ",
+						key = "r",
+						desc = "Recent Files",
+						action = function()
+							require("fzf-lua").oldfiles()
+						end,
+					},
+					{
+						icon = " ",
+						key = "c",
+						desc = "Config",
+						action = function()
+							require("fzf-lua").files({ cwd = nvim_config_dir() })
+						end,
+					},
+					{ icon = " ", key = "s", desc = "Restore Session", section = "session" },
+					{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+					{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+				},
+			},
+		},
+		explorer = { enabled = false },
+		indent = {
+			enabled = true,
+			char = "│",
+			only_scope = false,
+			animate = {
+				enabled = true,
+				style = "out",
+			},
+		},
 		input = { enabled = true },
-		picker = { enabled = true },
+		picker = {
+			enabled = true,
+			sources = {
+				projects = {
+					dev = { "~/programming", "~/dotfiles" },
+				},
+			},
+		},
 		notifier = { enabled = true },
 		quickfile = { enabled = true },
+		scope = { enabled = true },
 		scroll = { enabled = true },
 		statuscolumn = { enabled = true },
 		words = { enabled = true },
@@ -64,14 +129,7 @@ return {
 			function()
 				Snacks.picker.projects()
 			end,
-			desc = "Snacks: Find projects",
-		},
-		{
-			"<leader>fz",
-			function()
-				Snacks.picker.zoxide()
-			end,
-			desc = "Snacks: Jump to recent dir",
+			desc = "Find projects",
 		},
 	},
 }
@@ -108,3 +166,4 @@ return {
 --         --                     ]],
 --         --  },
 --     },
+-- }

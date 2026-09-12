@@ -1,31 +1,21 @@
--- Colorschemes. Catppuccin is the active default; the others are kept
--- as on-demand alternates and only load when you :colorscheme to them.
+-- Colorschemes + Themery picker
 
 return {
 	{
 		"loctvl842/monokai-pro.nvim",
 		lazy = false,
 		priority = 1000,
-		config = function()
-			require("monokai-pro").setup({
-				filter = "spectrum",
-			})
-			vim.cmd.colorscheme("monokai-pro-spectrum")
-		end,
+		opts = { filter = "spectrum" },
 	},
 	{
 		"polirritmico/monokai-nightasty.nvim",
+		lazy = true,
 		opts = {},
-		-- config = function(_, opts)
-		-- 	requre("monokai-nightasty").setup(opts)
-		-- 	vim.cmd.colorscheme("monokai-nightasty")
-		-- end,
 	},
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
-		lazy = false,
-		priority = 1000,
+		lazy = true,
 		opts = {
 			flavour = "mocha",
 			transparent_background = false,
@@ -46,12 +36,8 @@ return {
 				render_markdown = true,
 			},
 		},
-		-- config = function(_, opts)
-		-- 	require("catppuccin").setup(opts)
-		-- 	vim.cmd.colorscheme("catppuccin-mocha")
-		-- end,
 	},
-	{ "nyngwang/nvimgelion", name = "nvimgelion" },
+	{ "nyngwang/nvimgelion", name = "nvimgelion", lazy = true },
 	{ "ellisonleao/gruvbox.nvim", name = "gruvbox", lazy = true },
 	{ "folke/tokyonight.nvim", lazy = true, opts = { style = "storm" } },
 	{
@@ -70,17 +56,46 @@ return {
 	},
 	{
 		"xiyaowong/transparent.nvim",
-		lazy = false, -- Load immediately at boot
+		lazy = false,
 		config = function()
 			require("transparent").setup({
 				extra_groups = {
-					"NormalFloat", -- Clear floating window backgrounds
-					"NemoTree", -- Clear file tree backgrounds if you use Neo-tree
-					"LineNr", -- Clear line numbers background
-					"SignColumn", -- Clear git signs column background
+					"NormalFloat",
+					"NeoTreeNormal",
+					"NeoTreeNormalNC",
+					"LineNr",
+					"SignColumn",
 				},
 			})
 		end,
 	},
-	{ "nyoom-engineering/oxocarbon.nvim" },
+	{ "nyoom-engineering/oxocarbon.nvim", lazy = true },
+	{
+		"zaldih/themery.nvim",
+		lazy = false,
+		cmd = "Themery",
+		keys = {
+			{ "<leader>vt", "<cmd>Themery<cr>", desc = "Colorscheme picker" },
+		},
+		opts = {
+			livePreview = true,
+			themes = {
+				{ name = "Monokai Pro Spectrum", colorscheme = "monokai-pro-spectrum" },
+				{ name = "Monokai Pro Classic", colorscheme = "monokai-pro-classic" },
+				{ name = "Monokai Nightasty", colorscheme = "monokai-nightasty" },
+				{ name = "Catppuccin Mocha", colorscheme = "catppuccin-mocha" },
+				{ name = "Tokyo Night Storm", colorscheme = "tokyonight-storm" },
+				{ name = "Gruvbox", colorscheme = "gruvbox" },
+				{ name = "Evergarden", colorscheme = "evergarden" },
+				{ name = "Oxocarbon", colorscheme = "oxocarbon" },
+				{ name = "Nvimgelion", colorscheme = "nvimgelion" },
+			},
+		},
+		config = function(_, opts)
+			require("themery").setup(opts)
+			if not require("themery").getCurrentTheme() then
+				vim.cmd.colorscheme("monokai-pro-spectrum")
+			end
+		end,
+	},
 }

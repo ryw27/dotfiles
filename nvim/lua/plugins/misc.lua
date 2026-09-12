@@ -2,10 +2,7 @@
 -- Each one is opt-in / load-on-demand wherever possible.
 
 return {
-	{
-		"sindrets/diffview.nvim",
-		opts = {},
-	},
+	{ "tpope/vim-sleuth" },
 	-- LazyDev: types for nvim Lua API + luvit when editing nvim config.
 	{
 		"folke/lazydev.nvim",
@@ -16,11 +13,10 @@ return {
 			},
 		},
 	},
-	{
-		"NMAC427/guess-indent.nvim",
-		opts = {},
-	},
-
+	-- {
+	-- 	"NMAC427/guess-indent.nvim",
+	-- 	opts = {},
+	-- },
 	-- Highlights TODO / FIX / NOTE / HACK comments
 	{
 		"folke/todo-comments.nvim",
@@ -45,31 +41,29 @@ return {
 			{ "<leader>ft", "<cmd>TodoFzfLua<cr>", desc = "Find TODOs" },
 		},
 	},
-
 	-- Which-key: discoverable keymap popup with named groups.
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
 		opts = {
 			preset = "modern",
+			delay = 200,
 			spec = {
-				{ "<leader>f", group = "Find / Fuzzy" },
-				{ "<leader>g", group = "Git" },
-				{ "<leader>h", group = "Git Hunk" },
-				{ "<leader>d", group = "Delete" },
-				{ "<leader>D", group = "Debug" },
-				{ "<leader>t", group = "Test" },
-				{ "<leader>x", group = "Trouble" },
-				{ "<leader>c", group = "Code / LSP" },
-				{ "<leader>v", group = "Vim" },
-				{ "<leader>i", group = "Inlay / Toggle" },
-				{ "<leader>r", group = "Rename / Refactor" },
-				{ "<leader>b", group = "Breakpoint / Buffer" },
-				{ "<leader>n", group = "Notifications / Notes" },
-				{ "<leader>q", group = "Session" },
-				{ "[", group = "Prev" },
-				{ "]", group = "Next" },
-				{ "g", group = "Goto" },
+				{ "<leader>b", group = "Buffer", icon = { icon = "󰓩 ", color = "cyan" } },
+				{ "<leader>c", group = "Code", icon = { icon = "󰘦 ", color = "orange" } },
+				{ "<leader>D", group = "Debug", icon = { icon = "󰃤 ", color = "red" } },
+				{ "<leader>f", group = "Find", icon = { icon = "󰍉 ", color = "blue" } },
+				{ "<leader>g", group = "Git", icon = { icon = "󰊢 ", color = "orange" } },
+				{ "<leader>h", group = "Git hunk", icon = { icon = "󰊢 ", color = "yellow" } },
+				{ "<leader>i", group = "Toggle", icon = { icon = "󰔡 ", color = "yellow" } },
+				{ "<leader>j", group = "Harpoon", icon = { icon = "󰛢 ", color = "azure" } },
+				{ "<leader>m", group = "Markdown", icon = { icon = " ", color = "blue" } },
+				{ "<leader>n", group = "Messages", icon = { icon = "󰍡 ", color = "purple" } },
+				{ "<leader>q", group = "Session", icon = { icon = "󰆓 ", color = "green" } },
+				{ "<leader>r", group = "Rename", icon = { icon = "󰑕 ", color = "green" } },
+				{ "<leader>t", group = "Test", icon = { icon = "󰙨 ", color = "green" } },
+				{ "<leader>v", group = "Vim", icon = { icon = " ", color = "green" } },
+				{ "<leader>x", group = "Trouble", icon = { icon = "󰒡 ", color = "red" } },
 			},
 		},
 		keys = {
@@ -82,12 +76,83 @@ return {
 			},
 		},
 	},
-
 	-- Restore the buffers/windows you had open per project directory.
+	-- Autoload only for `nvim .` / `nvim path/to/proj`. Bare `nvim` → dashboard.
 	{
 		"folke/persistence.nvim",
 		event = "BufReadPre",
 		opts = {},
+		init = function()
+			local grp = vim.api.nvim_create_augroup("PersistenceAutoLoad", { clear = true })
+
+			-- Don't persist Avante's sidebar windows into the session file.
+			vim.api.nvim_create_autocmd("User", {
+				group = grp,
+				pattern = "PersistenceSavePre",
+				callback = function()
+					if not package.loaded["avante"] then
+						return
+					end
+					local sidebar = require("avante").get()
+					if sidebar and sidebar:is_open() then
+						sidebar:close()
+					end
+				end,
+			})
+
+			-- Session :source can race lazy FileType/LSP/lint hooks and leave
+			-- buffers stuck as plain text. Re-detect after load settles.
+			vim.api.nvim_create_autocmd("User", {
+				group = grp,
+				pattern = "PersistenceLoadPost",
+				callback = function()
+					vim.schedule(function()
+						for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+							if
+								vim.api.nvim_buf_is_loaded(buf)
+								and vim.bo[buf].buflisted
+								and vim.bo[buf].buftype == ""
+								and vim.api.nvim_buf_get_name(buf) ~= ""
+							then
+								vim.api.nvim_buf_call(buf, function()
+									vim.cmd("filetype detect")
+								end)
+							end
+						end
+					end)
+				end,
+			})
+
+			vim.api.nvim_create_autocmd("VimEnter", {
+				group = grp,
+				nested = true,
+				callback = function()
+					if vim.fn.argc() ~= 1 or vim.g.started_with_stdin then
+						return
+					end
+					local arg = vim.fn.argv(0)
+					if vim.fn.isdirectory(arg) == 0 then
+						return
+					end
+
+					vim.cmd.cd(arg)
+					local persistence = require("persistence")
+					local session = persistence.current()
+					if vim.fn.filereadable(session) == 0 then
+						session = persistence.current({ branch = false })
+					end
+
+					if vim.fn.filereadable(session) == 1 then
+						persistence.load()
+						return
+					end
+
+					-- No session: clear the directory buffer so the dashboard can own startup.
+					vim.api.nvim_buf_set_name(0, "")
+					vim.api.nvim_buf_set_lines(0, 0, -1, true, {})
+				end,
+			})
+		end,
 		keys = {
 			{
 				"<leader>qs",
@@ -112,23 +177,18 @@ return {
 			},
 		},
 	},
-
 	-- Color preview for #rrggbb / rgb() / hsl() / named colours.
 	{
 		"norcalli/nvim-colorizer.lua",
 		event = { "BufReadPost", "BufNewFile" },
 		opts = {},
 	},
-
 	-- Auto-pair brackets/quotes.
-	-- blink.cmp's auto_brackets only inserts () for function completions; it
-	-- doesn't pair [, {, ", ' as you type. nvim-autopairs does that.
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true,
 	},
-
 	-- Undotree: visualise the undo history.
 	{
 		"mbbill/undotree",
@@ -137,7 +197,6 @@ return {
 			{ "<leader>u", vim.cmd.UndotreeToggle, desc = "Undotree" },
 		},
 	},
-
 	-- Zen mode: distraction-free writing.
 	{
 		"folke/zen-mode.nvim",
@@ -153,30 +212,8 @@ return {
 			},
 		},
 	},
-
-	-- Oil: edit your filesystem like a buffer.
-	{
-		"stevearc/oil.nvim",
-		lazy = false,
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		---@module 'oil'
-		---@type oil.SetupOpts
-		opts = {
-			view_options = { show_hidden = true },
-			keymaps = {
-				["<C-h>"] = false, -- let tmux-navigator handle it
-				["<C-l>"] = false,
-				["q"] = "actions.close",
-			},
-		},
-		keys = {
-			{ "-", "<cmd>Oil<cr>", desc = "Open parent directory (Oil)" },
-		},
-	},
-
 	-- Bufferline: Line at the top with buffers
 	-- { "akinsho/bufferline.nvim", opts = {} },
-
 	-- Highlight-Undo: Highlights undo/redo changes
 	{
 		"tzachar/highlight-undo.nvim",
@@ -184,13 +221,12 @@ return {
 			hlgroup = "HighlightUndo",
 			duration = 300,
 			pattern = { "*" },
-			ignored_filetypes = { "neo-tree", "fugitive", "TelescopePrompt", "mason", "lazy" },
+			ignored_filetypes = { "neo-tree", "oil", "mason", "lazy", "snacks_dashboard" },
 			-- ignore_cb is in comma as there is a default implementation. Setting
 			-- to nil will mean no default os called.
 			-- ignore_cb = nil,
 		},
 	},
-
 	-- nvim-surround: Quicker keybinds for surrounding
 	{
 		"kylechui/nvim-surround",
@@ -204,7 +240,6 @@ return {
 		--     })
 		-- end
 	},
-
 	-- Harpoon: Quick navigation of common files
 	{
 		"ThePrimeagen/harpoon",
@@ -213,9 +248,16 @@ return {
 		config = function()
 			local harpoon = require("harpoon")
 
-			vim.keymap.set("n", "<leader>a", function()
+			-- <leader>j* = jump/harpoon (keeps <leader>a* free for Avante)
+			vim.keymap.set("n", "<leader>ja", function()
 				harpoon:list():add()
 			end, { desc = "Harpoon add file" })
+			vim.keymap.set("n", "<leader>jp", function()
+				harpoon:list():prev()
+			end, { desc = "Harpoon previous" })
+			vim.keymap.set("n", "<leader>jn", function()
+				harpoon:list():next()
+			end, { desc = "Harpoon next" })
 			vim.keymap.set("n", "<C-e>", function()
 				harpoon.ui:toggle_quick_menu(harpoon:list())
 			end, { desc = "Harpoon menu" })
@@ -232,24 +274,14 @@ return {
 			vim.keymap.set("n", "<M-4>", function()
 				harpoon:list():select(4)
 			end, { desc = "Harpoon file 4" })
-
-			-- Ctrl+Shift chords are not reliable in many terminals.
-			vim.keymap.set("n", "<leader>ap", function()
-				harpoon:list():prev()
-			end, { desc = "Harpoon previous" })
-			vim.keymap.set("n", "<leader>an", function()
-				harpoon:list():next()
-			end, { desc = "Harpoon next" })
 		end,
 	},
-
 	-- Attaches notes to certain project files (made by me)
 	{
 		"ryw27/projectnotes.nvim",
 		branch = "test",
 		opts = {},
 	},
-
 	-- Nvim-treesitter: Uses treesitter for easier highlighting
 	-- {
 	-- 	"nvim-treesitter/nvim-treesitter-textobjects",

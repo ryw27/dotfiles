@@ -6,7 +6,7 @@
 return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown" },
+		ft = { "markdown", "Avante" },
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-tree/nvim-web-devicons",
@@ -14,6 +14,8 @@ return {
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {
+			-- ft= above only lazy-loads the plugin; file_types enables rendering.
+			file_types = { "markdown", "Avante" },
 			completions = { lsp = { enabled = true } },
 			heading = {
 				sign = false,
@@ -57,8 +59,8 @@ return {
 					-- Normal: open new bullet lines, toggle checkbox, recalc on delete.
 					map("n", "o", "o<cmd>AutolistNewBullet<cr>", opts)
 					map("n", "O", "O<cmd>AutolistNewBulletBefore<cr>", opts)
-					map("n", "<C-r>", "<cmd>AutolistRecalculate<cr>", opts)
-					map("n", "<leader>x", "<cmd>AutolistToggleCheckbox<cr>", opts)
+					map("n", "<leader>mr", "<cmd>AutolistRecalculate<cr>", opts)
+					map("n", "<leader>mx", "<cmd>AutolistToggleCheckbox<cr>", opts)
 					map("n", "dd", "dd<cmd>AutolistRecalculate<cr>", opts)
 					map("x", "d", "d<cmd>AutolistRecalculate<cr>", opts)
 				end,

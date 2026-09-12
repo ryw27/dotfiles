@@ -1,6 +1,5 @@
 -- fzf-lua: fuzzy finder for files, grep, LSP, diagnostics, help, keymaps.
--- live in lsp-config.lua's LspAttach handler so they are
--- buffer-local to LSP-attached buffers.
+-- Also in lsp-config.lua's LspAttach handler
 
 return {
 	"ibhagwan/fzf-lua",
@@ -54,9 +53,17 @@ return {
 			desc = "Find recent files",
 		},
 		{
+			"<leader>fz",
+			function()
+				require("fzf-lua").zoxide()
+			end,
+			desc = "Jump to recent dir (zoxide)",
+		},
+		{
 			"<leader>fc",
 			function()
-				require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
+				local dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath("config") .. "/init.lua"), ":h")
+				require("fzf-lua").files({ cwd = dir })
 			end,
 			desc = "Find config files",
 		},
@@ -100,7 +107,8 @@ return {
 		{
 			"<leader>fC",
 			function()
-				require("fzf-lua").live_grep({ cwd = vim.fn.stdpath("config") })
+				local dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath("config") .. "/init.lua"), ":h")
+				require("fzf-lua").live_grep({ cwd = dir })
 			end,
 			desc = "Grep config files",
 		},

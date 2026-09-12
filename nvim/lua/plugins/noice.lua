@@ -12,7 +12,7 @@ return {
 	opts = {
 		cmdline = { enabled = true, view = "cmdline_popup" },
 		messages = { enabled = true },
-		popupmenu = { enabled = true },
+		popupmenu = { enabled = false }, -- blink.cmp owns cmdline completion
 		notify = { enabled = false }, -- snacks.notifier handles vim.notify
 		lsp = {
 			progress = { enabled = false }, -- snacks shows progress; avoid duplicates

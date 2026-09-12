@@ -7,7 +7,7 @@ return {
 	opts = function()
 		return {
 			options = {
-				theme = "monokai-pro",
+				theme = "auto",
 				globalstatus = true,
 				component_separators = { left = "│", right = "│" },
 				section_separators = { left = "", right = "" },

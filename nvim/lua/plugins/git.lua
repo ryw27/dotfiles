@@ -1,4 +1,4 @@
--- Git: lazygit popup + inline hunk navigation/staging via gitsigns. Diffs with diffview
+-- Git: lazygit + gitsigns. Diffs with diffview
 
 return {
 	{
@@ -16,6 +16,11 @@ return {
 			{ "<leader>gf", "<cmd>LazyGitCurrentFile<cr>", desc = "LazyGit (current file's repo)" },
 			{ "<leader>gl", "<cmd>LazyGitFilter<cr>", desc = "LazyGit log" },
 		},
+	},
+	{
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewFileHistory" },
+		opts = {},
 	},
 	{
 		"lewis6991/gitsigns.nvim",
@@ -65,10 +70,7 @@ return {
 			end,
 		},
 	},
-	{
-		"sindrets/diffview.nvim",
-		opts = {},
-	},
+
 	-- {
 	--     "tpope/vim-fugitive", opts = {}
 	-- }

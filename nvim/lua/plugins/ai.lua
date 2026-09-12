@@ -1,0 +1,29 @@
+-- TODO: Omp? 
+-- return {
+-- 	"yetone/avante.nvim",
+-- 	event = "VeryLazy",
+-- 	build = "make",
+-- 	dependencies = {
+-- 		"nvim-lua/plenary.nvim",
+-- 		"MunifTanjim/nui.nvim",
+-- 	},
+-- 	opts = {
+-- 		provider = "cursor",
+-- 		mode = "agentic",
+-- 		acp_providers = {
+-- 			cursor = {
+-- 				command = vim.fn.expand("~/.local/bin/agent"),
+-- 				args = { "acp" },
+-- 				auth_method = "cursor_login",
+-- 				env = {
+-- 					HOME = os.getenv("HOME"),
+-- 					PATH = os.getenv("PATH"),
+-- 				},
+-- 			},
+-- 		},
+-- 		-- windows = {
+-- 		-- 	sidebar_header = { enabled = false },
+-- 		-- },
+-- 	},
+-- }
+return {}
