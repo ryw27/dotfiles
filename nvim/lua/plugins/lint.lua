@@ -5,8 +5,8 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		require("lint").linters_by_ft = {
-			c = { "cppcheck" },
-			cpp = { "cppcheck" },
+			-- c = { "cppcheck" },
+			-- cpp = { "cppcheck" },
 			javascript = { "eslint_d" },
 			javascriptreact = { "eslint_d" },
 			typescript = { "eslint_d" },
@@ -25,3 +25,4 @@ return {
 		})
 	end,
 }
+

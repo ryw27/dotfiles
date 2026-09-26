@@ -30,7 +30,6 @@ return {
 		jsonc = { "prettierd", "prettier", stop_after_first = true },
 		yaml = { "prettierd", "prettier", stop_after_first = true },
 		toml = { "taplo" },
-		markdown = { "prettierd", "prettier", stop_after_first = true },
 	},
 	format_on_save = {
 		timeout_ms = 3000,

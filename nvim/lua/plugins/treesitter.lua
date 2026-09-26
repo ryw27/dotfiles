@@ -4,29 +4,23 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	lazy = false,
 	build = ":TSUpdate",
-	opts = {
-		auto_install = true,
-		ensure_installed = {
-			-- Languages
-			"c", "cpp", "rust", "go", "zig",
-			"python", "lua", "vim", "vimdoc", "query",
-			"java", "ruby",
-			"javascript", "typescript", "tsx", "html", "css", "scss",
-			"graphql", "prisma",
-			-- Data / config
-			"json", "jsonc", "yaml", "toml", "xml",
-			-- Build / infra
-			"dockerfile", "make", "cmake", "ninja",
-			-- Shell
-			"bash",
-			-- Docs / VCS
-			"markdown", "markdown_inline",
-			"gitcommit", "gitignore", "git_config", "git_rebase",
-			"diff", "regex", "comment",
-			-- DB
-			"sql",
-		},
-		highlight = { enable = true },
-		indent = { enable = true },
-	},
+	init = function()
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = {
+				"c", "cpp", "rust", "go", "zig",
+				"python", "lua", "java", "ruby",
+				"javascript", "javascriptreact", "typescript", "typescriptreact",
+				"html", "css", "scss", "graphql", "prisma",
+				"json", "jsonc", "yaml", "toml", "xml",
+				"dockerfile", "make", "cmake", "ninja",
+				"sh", "bash", "zsh",
+				"vim", "help", "query", "markdown",
+				"gitcommit", "gitignore", "gitconfig", "gitrebase", "diff",
+				"sql",
+			},
+			callback = function()
+				vim.treesitter.start()
+			end,
+		})
+	end,
 }

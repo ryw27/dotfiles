@@ -147,9 +147,11 @@ return {
 						return
 					end
 
-					-- No session: clear the directory buffer so the dashboard can own startup.
-					vim.api.nvim_buf_set_name(0, "")
-					vim.api.nvim_buf_set_lines(0, 0, -1, true, {})
+					local dir_buf = vim.api.nvim_get_current_buf()
+					require("snacks").dashboard.open()
+					if vim.api.nvim_buf_is_valid(dir_buf) then
+						vim.api.nvim_buf_delete(dir_buf, { force = true })
+					end
 				end,
 			})
 		end,

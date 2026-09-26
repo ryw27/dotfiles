@@ -1,7 +1,6 @@
 -- Markdown stack:
 --   * render-markdown.nvim -> pretty in-buffer rendering
 --   * autolist.nvim        -> bullet/number/checkbox continuation + recalc
--- Both lazy-load on markdown/text/gitcommit so other buffers are untouched.
 
 return {
 	{
@@ -13,37 +12,14 @@ return {
 		},
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
-		opts = {
-			-- ft= above only lazy-loads the plugin; file_types enables rendering.
-			file_types = { "markdown", "Avante" },
-			completions = { lsp = { enabled = true } },
-			heading = {
-				sign = false,
-				width = "block",
-				position = "inline",
-			},
-			code = {
-				sign = false,
-				width = "block",
-				border = "thin",
-				min_width = 60,
-			},
-			bullet = { icons = { "●", "○", "◆", "◇" } },
-			checkbox = {
-				unchecked = { icon = " 󰄱 " },
-				checked = { icon = " 󰱒 " },
-			},
-			pipe_table = { preset = "round" },
-		},
+		opts = {},
 	},
-
 	{
 		"gaoDean/autolist.nvim",
 		ft = { "markdown", "text", "gitcommit" },
 		config = function()
 			require("autolist").setup()
 
-			-- Buffer-local maps only — avoids hijacking <CR>/<Tab> elsewhere.
 			vim.api.nvim_create_autocmd("FileType", {
 				group = vim.api.nvim_create_augroup("autolist_keys", { clear = true }),
 				pattern = { "markdown", "text", "gitcommit" },
