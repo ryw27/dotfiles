@@ -2,5 +2,6 @@ zsh/conf/proxy
 zsh/conf/theme
 nvim/lazy-lock.json
 nvim/lazyvim.json
+nvim.log
 *.swp
 *.zwc
