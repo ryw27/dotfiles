@@ -69,7 +69,7 @@ return {
 			})
 		end,
 	},
-	{ "nyoom-engineering/oxocarbon.nvim", lazy = true },
+	-- { "nyoom-engineering/oxocarbon.nvim", lazy = true },
 	{
 		"zaldih/themery.nvim",
 		lazy = false,
@@ -87,7 +87,7 @@ return {
 				{ name = "Tokyo Night Storm", colorscheme = "tokyonight-storm" },
 				{ name = "Gruvbox", colorscheme = "gruvbox" },
 				{ name = "Evergarden", colorscheme = "evergarden" },
-				{ name = "Oxocarbon", colorscheme = "oxocarbon" },
+				-- { name = "Oxocarbon", colorscheme = "oxocarbon" },
 				{ name = "Nvimgelion", colorscheme = "nvimgelion" },
 			},
 		},
